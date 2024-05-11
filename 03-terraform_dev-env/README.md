@@ -1,6 +1,7 @@
 ![alt text](image.png)
 
 Gen ssh key
+
 ```sh
 ssh-keygen -t ed25519
 ```
@@ -20,3 +21,7 @@ terraform state list
 
 
 ```
+
+Reference:
+
+- https://www.youtube.com/watch?v=iRaai1IBlB0

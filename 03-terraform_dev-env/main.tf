@@ -88,5 +88,13 @@ resource "aws_instance" "dev_node" {
     Name = "dev-node"
   }
 
+  provisioner "local-exec" {
+    command = templatefile("window-ssh-config.tpl", {
+      hostname     = self.public_ip
+      user         = "ec2-user"
+      identityfile = "~/.ssh/dev-ssh"
+    })
+    interpreter = ["Powersheel", "-Command"]
+  }
 
 }
