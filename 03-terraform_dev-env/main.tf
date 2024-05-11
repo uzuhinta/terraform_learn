@@ -48,7 +48,7 @@ resource "aws_route_table_association" "dev_public_assoc" {
 }
 
 resource "aws_security_group" "dev_sg_allow_all" {
-  name        = "dev_sg"
+  name        = "dev_sg_allow_all"
   description = "dev security group"
   vpc_id      = aws_vpc.dev_vpc.id
 
@@ -73,18 +73,20 @@ resource "aws_key_pair" "dev_auth" {
 }
 
 resource "aws_instance" "dev_node" {
-  instance_type = "t2.micro"
-  ami           = data.aws_ami.server_ami.id
+  instance_type          = "t2.micro"
+  ami                    = data.aws_ami.server_ami.id
+  key_name               = aws_key_pair.dev_auth.id
+  vpc_security_group_ids = [aws_security_group.dev_sg_allow_all.id]
+  subnet_id              = aws_subnet.dev_public_subnet.id
+  user_data              = file("userdata.tpl")
+
+  root_block_device {
+    volume_size = 10
+  }
 
   tags = {
     Name = "dev-node"
   }
 
-  key_name               = aws_key_pair.dev_auth.id
-  vpc_security_group_ids = [aws_security_group.dev_sg_allow_all.id]
-  subnet_id              = aws_subnet.dev_public_subnet.id
 
-  root_block_device {
-    volume_size = 10
-  }
 }
